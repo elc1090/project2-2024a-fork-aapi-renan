@@ -13,8 +13,9 @@
 Acesso: Substitua este texto pela URL de deploy do projeto
 
 ### Desenvolvedores
-Renan Bick - Sistemas de Informação
-Thales Lagemann - Sistemas de Informação
+
+- Renan Bick - Sistemas de Informação
+- Thales Lagemann - Sistemas de Informação
 
 ### Nosso produto
 
