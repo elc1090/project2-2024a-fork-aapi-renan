@@ -18,8 +18,6 @@ Thales Lagemann - Sistemas de Informação
 
 ### Nosso produto
 
-Substitua este texto por uma descrição do que foi produzido: funcionalidades e relação com a temática "Conhecimento"
-
 Quiz de Programação
 Quiz com perguntas que tocam em várias áreas da programação e desenvolvimento de software, como Linguagens, Frameworks, Bibliotecas, Conceitos, Paradigmas, Ferramentas, etc.
 
@@ -37,14 +35,12 @@ Substitua este texto por uma descrição do processo de desenvolvimento, explica
 
 #### Tecnologias
 
-Substitua este trecho por uma lista detalhada de tecnologias usadas (tanto as básicas, como HTML e CSS, como as mais específicas, por exemplo algum framework para frontend, etc.):
 - Notion (API e Backend)
 - React (Frontend)
 - CSS (Styling)
 
 #### Ambiente de desenvolvimento
 
-Substitua este trecho por uma lista detalhada dos ambientes/ferramentas de desenvolvimento utilizadas (por exemplo, VS Code + alguma extensão, etc.)
 - VS Code
 
 #### Referências e créditos
