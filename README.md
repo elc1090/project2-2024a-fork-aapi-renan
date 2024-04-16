@@ -28,6 +28,7 @@ Quiz com perguntas que tocam em várias áreas da programação e desenvolviment
 Substitua este texto por informações sobre a API escolhida, incluindo URL com documentação e exemplos de endpoints.
 
 Iremos utilizar o web-aplicativo Notion para criar nossas tabelas e fazer chamadas de API.
+
 [Notion](https://www.notion.so/pt-br)
 
 ### Desenvolvimento
