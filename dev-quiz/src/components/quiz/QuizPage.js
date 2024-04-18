@@ -10,12 +10,23 @@ const Quiz = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('https://api.notion.com/v1/databases/{NOTION_DATABASE_ID}/query', {
+        const response = await axios.get('https://api.notion.com/v1/databases/DB-teste-5f465b1f25cc47f1a92beb4bbf2a06d0', {
           headers: {
-            'Authorization': 'Bearer YOUR_NOTION_API_KEY',
+            'Authorization': 'Bearer secret_yHKYSqgaUWeVfbnws7uh8prjXKhSCVGnekCuvJ7CYeO',
             'Notion-Version': '2021-05-13',
           }
         });
+
+        const { Client } = require('@notionhq/client');
+
+        const notion = new Client({ auth: 'secret_yHKYSqgaUWeVfbnws7uh8prjXKhSCVGnekCuvJ7CYeO' });
+
+        (async () => {
+            const databaseId = 'DB-teste-5f465b1f25cc47f1a92beb4bbf2a06d0';
+            const response = await notion.databases.retrieve({ database_id: databaseId });
+            console.log(response);
+        })();
+
         setQuestions(response.data.results);
         setLoading(false);
       } catch (error) {

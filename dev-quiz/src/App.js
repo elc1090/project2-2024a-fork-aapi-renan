@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <h1>Bem-vindo(a) ao Dev-Quiz!</h1>
         <p>Um quiz de conhecimentos gerais sobre o mundo da programação</p>
-        <Link to="/select-field" className="btn btn-primary">Start</Link>
+        <Link to="/select-field">Start</Link>
       </header>
     </div>
   );
