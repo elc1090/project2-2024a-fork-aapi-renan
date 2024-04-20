@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import './styles/tailwind.css';
 
-const Quiz = () => {
+var Quiz = () => {
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [score, setScore] = useState(0);
@@ -10,27 +11,35 @@ const Quiz = () => {
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await axios.get('https://api.notion.com/v1/databases/DB-teste-5f465b1f25cc47f1a92beb4bbf2a06d0', {
-          headers: {
-            'Authorization': 'Bearer secret_yHKYSqgaUWeVfbnws7uh8prjXKhSCVGnekCuvJ7CYeO',
-            'Notion-Version': '2021-05-13',
-          }
-        });
+        // const response = await axios.get(
+        //   "https://api.notion.com/v1/databases/DB-teste-5f465b1f25cc47f1a92beb4bbf2a06d0/query",
+        //   {
+        //     headers: {
+        //       Authorization:
+        //         "Bearer secret_yHKYSqgaUWeVfbnws7uh8prjXKhSCVGnekCuvJ7CYeO",
+        //       "Notion-Version": "2021-05-13",
+        //     },
+        //   }
+        // );
 
-        const { Client } = require('@notionhq/client');
+        // const { Client } = require("@notionhq/client");
 
-        const notion = new Client({ auth: 'secret_yHKYSqgaUWeVfbnws7uh8prjXKhSCVGnekCuvJ7CYeO' });
+        // const notion = new Client({
+        //   auth: "secret_yHKYSqgaUWeVfbnws7uh8prjXKhSCVGnekCuvJ7CYeO",
+        // });
 
-        (async () => {
-            const databaseId = 'DB-teste-5f465b1f25cc47f1a92beb4bbf2a06d0';
-            const response = await notion.databases.retrieve({ database_id: databaseId });
-            console.log(response);
-        })();
+        // (async () => {
+        //   const databaseId = "DB-teste-5f465b1f25cc47f1a92beb4bbf2a06d0";
+        //   const response = await notion.databases.retrieve({
+        //     database_id: databaseId,
+        //   });
+        //   console.log(response);
+        // })();
 
-        setQuestions(response.data.results);
+        // setQuestions(response.data.results);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching questions:', error);
+        console.error("Error fetching questions:", error);
       }
     };
 
@@ -58,15 +67,23 @@ const Quiz = () => {
     <div>
       <h1>Quiz</h1>
       <div>
-        Question {currentQuestion + 1} of {questions.length}
+        Question 1
+         {/* {currentQuestion + 1} of {questions.length} */}
       </div>
-      <div>{questions[currentQuestion].question}</div>
       <div>
-        {questions[currentQuestion].options.map((option, index) => (
+        pergunta blablablablabla?
+        {/* {questions[currentQuestion].question} */}
+      </div>
+      <div>
+        {/* {questions[currentQuestion].options.map((option, index) => (
           <button key={index} onClick={() => handleAnswer(option)}>
             {option}
           </button>
-        ))}
+        ))} */}
+        <button>a - Sim</button>
+        <button>b - Não</button>
+        <button>c - Talvez</button>
+        <button>d - Batata Frita</button>
       </div>
       <div>
         Score: {score}/{questions.length}
