@@ -1,5 +1,3 @@
-// Button.js
-
 import React from 'react';
 import styled from 'styled-components';
 
@@ -16,14 +14,15 @@ const StyledButton = styled.button`
   cursor: pointer;
   border-radius: 5px;
   transition-duration: 0.4s;
+
   &:hover {
     background-color: #45a049;
   }
 `;
 
-const Button = ({ children }) => {
+const Button = ({ children, onClick, style, disabled }) => {
   return (
-    <StyledButton>
+    <StyledButton onClick={onClick} style={style} disabled={disabled}>
       {children}
     </StyledButton>
   );
