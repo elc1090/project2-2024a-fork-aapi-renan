@@ -1,6 +1,6 @@
 // QuizPage.js
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../button/button.js";
@@ -106,126 +106,102 @@ const UsernameInput = styled.input`
   box-sizing: border-box;
 `;
 
-async function chamadaPerguntas (){
-  const fetch = require('node-fetch');
+async function chamadaPerguntas() {
+  const fetch = require("node-fetch");
 
-// Definindo a URL da API e a chave da API
-  const apiUrl = 'https://quizapi.io/api/v1/questions';
-  const apiKey = 'yoxh1LlD16VsNHP8rjGofqbDiz59lAEnSmCumzvB';
+  var questions = [];
 
-// Definindo os parâmetros da requisição
+  // Definindo a URL da API e a chave da API
+  const apiUrl = "https://quizapi.io/api/v1/questions";
+  const apiKey = "yoxh1LlD16VsNHP8rjGofqbDiz59lAEnSmCumzvB";
+
+  // Definindo os parâmetros da requisição
   const params = {
     limit: 50,
     category: "Linux",
-    difficulty: "easy"
+    difficulty: "easy",
   };
 
-// Fazendo a requisição GET para a API
-  fetch(`${apiUrl}?${new URLSearchParams(params)}`, {
+  // Fazendo a requisição GET para a API
+  await fetch(`${apiUrl}?${new URLSearchParams(params)}`, {
     headers: {
-      'X-Api-Key': apiKey,
+      "X-Api-Key": apiKey,
     },
   })
-      .then(response => response.json()) // Convertendo a resposta em JSON
-      .then(data => {
-        // Iterando sobre as perguntas retornadas e imprimindo cada uma
-        data.forEach(question => {
-          console.log(question);
-          console.log(`Pergunta: ${question.question}`);
-          const corret_ans = question.correct_answer;
-          for (let key in question.answers) {
-            console.log(`Resposta ${key}: ${question.answers[key]}`);
-          }
-          console.log(`Resposta certa: ${corret_ans}`);
-        });
-      })
-      .catch(error => console.error('Erro:', error)); // Capturando qualquer erro que possa ocorrer
+    .then((response) => response.json()) // Convertendo a resposta em JSON
+    .then((data) => {
+      questions = data;
+    })
+    .catch((error) => console.error("Erro:", error)); // Capturando qualquer erro que possa ocorrer
+  return questions;
 }
 
 const QuizPage = () => {
-  chamadaPerguntas();
   // State variables for managing the quiz
-  const [questions, setQuestions] = useState([
-    {
-      id: 1,
-      question: "What is the output of the following JavaScript code?",
-      code: `function foo() {
-  var a = 1;
-  function bar() {
-    var a = 2;
-  }
-  bar();
-  console.log(a);
-}
-foo();`,
-      options: [
-        { id: 1, text: "1" },
-        { id: 2, text: "2" },
-        { id: 3, text: "undefined" },
-        { id: 4, text: "ReferenceError" },
-      ],
-      correctAnswer: "ReferenceError",
-      answered: false,
-    },
-    {
-      id: 1,
-      question: "What is the output of the following JavaScript code?",
-      code: `function foo() {
-  var a = 1;
-  function bar() {
-    var a = 2;
-  }
-  bar();
-  console.log(a);
-}
-foo();`,
-      options: [
-        { id: 1, text: "1" },
-        { id: 2, text: "2" },
-        { id: 3, text: "undefined" },
-        { id: 4, text: "ReferenceError" },
-      ],
-      correctAnswer: "ReferenceError",
-      answered: false,
-    },
-    {
-      id: 1,
-      question: "What is the output of the following JavaScript code?",
-      code: `function foo() {
-  var a = 1;
-  function bar() {
-    var a = 2;
-  }
-  bar();
-  console.log(a);
-}
-foo();`,
-      options: [
-        { id: 1, text: "1" },
-        { id: 2, text: "2" },
-        { id: 3, text: "undefined" },
-        { id: 4, text: "ReferenceError" },
-      ],
-      correctAnswer: "ReferenceError",
-      answered: false,
-    },
-    // Add more questions here
-  ]);
+  const [questions, setQuestions] = useState([]);
+  const [answeredQuestions, setAnsweredQuestions] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentAnswers, setCurrentAnswers] = useState([]);
+  const [currentCorrectAnswer, setCurrentCorrectAnswer] = useState("");
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
   const [username, setUsername] = useState("");
   const [showEndMessage, setShowEndMessage] = useState(false);
   const [highScores, setHighScores] = useState([]);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchQuestions() {
+      try {
+        const response = await chamadaPerguntas();
+        setQuestions(response);
+        setAnsweredQuestions(
+          response.map((question) => ({
+            id: question.id,
+            answered: false,
+          }))
+        );
+        setCurrentAnswers([
+          response[0].answers["answer_a"]
+            ? response[0].answers["answer_a"]
+            : null,
+          response[0].answers["answer_b"]
+            ? response[0].answers["answer_b"]
+            : null,
+          response[0].answers["answer_c"]
+            ? response[0].answers["answer_c"]
+            : null,
+          response[0].answers["answer_d"]
+            ? response[0].answers["answer_d"]
+            : null,
+          response[0].answers["answer_e"]
+            ? response[0].answers["answer_e"]
+            : null,
+          response[0].answers["answer_f"]
+            ? response[0].answers["answer_f"]
+            : null,
+        ]);
+        for (var element in response[0].correct_answers) {
+          if (response[0].correct_answers[element] === "true") {
+            setCurrentCorrectAnswer(
+              response[0].answers[element.replace("_correct", "")]
+            );
+          }
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching questions: ", error);
+      }
+    }
+    fetchQuestions();
+  }, []);
 
   // Function to handle user's answer selection
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
-    const updatedQuestions = [...questions];
-    updatedQuestions[currentQuestionIndex].answered = true;
-    setQuestions(updatedQuestions);
-    if (answer === questions[currentQuestionIndex].correctAnswer) {
+    answeredQuestions[currentQuestionIndex].answered = true;
+    if (selectedAnswer === currentCorrectAnswer) {
       // Increment the score
       setScore(score + 1);
     }
@@ -243,6 +219,27 @@ foo();`,
         // Move to the next question
         setSelectedAnswer(null);
         setCurrentQuestionIndex(currentQuestionIndex + 1);
+
+        setCurrentAnswers([
+          questions[currentQuestionIndex].answers["answer_a"]
+            ? questions[currentQuestionIndex].answers["answer_a"]
+            : null,
+          questions[currentQuestionIndex].answers["answer_b"]
+            ? questions[currentQuestionIndex].answers["answer_b"]
+            : null,
+          questions[currentQuestionIndex].answers["answer_c"]
+            ? questions[currentQuestionIndex].answers["answer_c"]
+            : null,
+          questions[currentQuestionIndex].answers["answer_d"]
+            ? questions[currentQuestionIndex].answers["answer_d"]
+            : null,
+          questions[currentQuestionIndex].answers["answer_e"]
+            ? questions[currentQuestionIndex].answers["answer_e"]
+            : null,
+          questions[currentQuestionIndex].answers["answer_f"]
+            ? questions[currentQuestionIndex].answers["answer_f"]
+            : null,
+        ]);
       } else {
         // Display a message to select an answer
         alert("Please select an answer");
@@ -255,125 +252,128 @@ foo();`,
     setHighScores([...highScores, { name: username, score }]);
   };
 
-  return (
-    <PageContainer>
-      {/* Header component for quiz title, score, and questions answered */}
-      <Header
-        title="DevQuiz"
-        score={score}
-        questionsAnswered={`${currentQuestionIndex}/${questions.length}`}
-      />
-      {/* Container for question and options */}
-      {showEndMessage ? (
-        <EndMessageContainer>
-          <EndMessage>
-            You scored {score} out of {questions.length}!
-          </EndMessage>
-          <UsernameInput
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your name"
-          />
-          <br />
-          <NextQuestionButton onClick={handleFinishQuiz}>
-            <Link to="/highscores">Send Hiscore</Link>
-          </NextQuestionButton>
-        </EndMessageContainer>
-      ) : (
-        <Container>
-          <QuestionNumber>Question {currentQuestionIndex + 1}</QuestionNumber>
-          <Question>{questions[currentQuestionIndex].question}</Question>
-          {questions[currentQuestionIndex].code && (
-            <Code>{questions[currentQuestionIndex].code}</Code>
-          )}
-          {/* Options for user to select */}
-          <Options>
-            {questions[currentQuestionIndex].options.map((option) => (
-              <Button
-                key={option.id}
-                onClick={() => handleAnswerClick(option.text)}
-                disabled={questions[currentQuestionIndex].answered}
-                style={{
-                  // Color the button based on the user's selection
-                  backgroundColor:
-                    selectedAnswer === option.text
-                      ? option.text ===
-                        questions[currentQuestionIndex].correctAnswer
-                        ? "#68d391" // Green if correct answer
-                        : selectedAnswer ===
-                          questions[currentQuestionIndex].correctAnswer
-                        ? "#f6e05e" // Yellow if wrong answer
-                        : "#f56565" // Red if wrong answer and not selected
-                      : questions[currentQuestionIndex].answered === true &&
-                        option.text ===
-                          questions[currentQuestionIndex].correctAnswer
-                      ? "#f6e05e"
-                      : "#4299e1", // Blue if not selected
-                  borderColor:
-                    selectedAnswer === option.text
-                      ? option.text ===
-                        questions[currentQuestionIndex].correctAnswer
-                        ? "#68d391"
-                        : selectedAnswer ===
-                          questions[currentQuestionIndex].correctAnswer
-                        ? "#f6e05e"
-                        : "#f56565"
-                      : "#4299e1",
-                  ":hover": {
-                    backgroundColor:
-                      selectedAnswer === option.text
-                        ? option.text ===
-                          questions[currentQuestionIndex].correctAnswer
-                          ? "#4cb976" // Green if correct answer
-                          : selectedAnswer ===
-                            questions[currentQuestionIndex].correctAnswer
-                          ? "#ccb635" // Yellow if wrong answer
-                          : "#c93f3f" // Red if wrong answer and not selected
-                        : questions[currentQuestionIndex].answered === true &&
-                          option.text ===
-                            questions[currentQuestionIndex].correctAnswer
-                        ? "#ccb635"
-                        : "#2a7fc5", // Blue if not selected
-                  },
-                }}
-              >
-                {option.text}
-              </Button>
-            ))}
-          </Options>
-          {/* Display feedback whether the answer is correct or wrong */}
-          {selectedAnswer && (
-            <AnswerFeedback
-              correct={
-                selectedAnswer === questions[currentQuestionIndex].correctAnswer
-              }
-            >
-              {selectedAnswer === questions[currentQuestionIndex].correctAnswer
-                ? "Correct!"
-                : "Wrong!"}
-            </AnswerFeedback>
-          )}
-        </Container>
-      )}
-      {/* Footer for next question button */}
-      <Footer>
-        {/* Show next question button only if an answer is selected and it's not the last question */}
-        {currentQuestionIndex === questions.length - 1 && !quizFinished
-          ? selectedAnswer !== null && (
-              <NextQuestionButton onClick={handleNextQuestion}>
-                Finish Quiz
-              </NextQuestionButton>
-            )
-          : selectedAnswer !== null &&
-            currentQuestionIndex !== questions.length - 1 && (
-              <NextQuestionButton onClick={handleNextQuestion}>
-                Next Question
-              </NextQuestionButton>
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!loading) {
+    return (
+      <PageContainer>
+        {/* Header component for quiz title, score, and questions answered */}
+        <Header
+          title="DevQuiz"
+          score={score}
+          questionsAnswered={`${currentQuestionIndex}/${questions.length}`}
+        />
+        {/* Container for question and options */}
+        {showEndMessage ? (
+          <EndMessageContainer>
+            <EndMessage>
+              You scored {score} out of {questions.length}!
+            </EndMessage>
+            <UsernameInput
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              placeholder="Enter your name"
+            />
+            <br />
+            <NextQuestionButton onClick={handleFinishQuiz}>
+              <Link to="/highscores">Send Hiscore</Link>
+            </NextQuestionButton>
+          </EndMessageContainer>
+        ) : questions !== ([]) ? (
+          <Container>
+            <QuestionNumber>Question {currentQuestionIndex + 1}</QuestionNumber>
+            <Question>{questions[currentQuestionIndex].question}</Question>
+            {questions[currentQuestionIndex].code && (
+              <Code>{questions[currentQuestionIndex].code}</Code>
             )}
-      </Footer>
-    </PageContainer>
-  );
+            {/* Options for user to select */}
+
+            <Options>
+              {currentAnswers.map((option, index) =>
+                option !== null ? (
+                  <Button
+                    key={index}
+                    onClick={() => handleAnswerClick(option)}
+                    disabled={answeredQuestions[currentQuestionIndex].answered}
+                    style={{
+                      // Color the button based on the user's selection
+                      backgroundColor:
+                        selectedAnswer === option
+                          ? option === currentCorrectAnswer
+                            ? "#68d391" // Green if correct answer
+                            : selectedAnswer === currentCorrectAnswer
+                            ? "#f6e05e" // Yellow if wrong answer
+                            : "#f56565" // Red if wrong answer and not selected
+                          : questions[currentQuestionIndex].answered === true &&
+                            option === currentCorrectAnswer
+                          ? "#f6e05e"
+                          : "#4299e1", // Blue if not selected
+                      borderColor:
+                        selectedAnswer === option
+                          ? option === currentCorrectAnswer
+                            ? "#68d391"
+                            : selectedAnswer === currentCorrectAnswer
+                            ? "#f6e05e"
+                            : "#f56565"
+                          : "#4299e1",
+                      ":hover": {
+                        backgroundColor:
+                          selectedAnswer === option
+                            ? option === currentCorrectAnswer
+                              ? "#4cb976" // Green if correct answer
+                              : selectedAnswer === currentCorrectAnswer
+                              ? "#ccb635" // Yellow if wrong answer
+                              : "#c93f3f" // Red if wrong answer and not selected
+                            : questions[currentQuestionIndex].answered ===
+                                true && option === currentCorrectAnswer
+                            ? "#ccb635"
+                            : "#2a7fc5", // Blue if not selected
+                      },
+                    }}
+                  >
+                    {option}
+                  </Button>
+                ) : (
+                  <></>
+                )
+              )}
+            </Options>
+            {/* Display feedback whether the answer is correct or wrong */}
+            {selectedAnswer && (
+              <AnswerFeedback
+                correct={(selectedAnswer === currentCorrectAnswer).toString()}
+              >
+                {selectedAnswer === currentCorrectAnswer
+                  ? "Correct!"
+                  : "Wrong!"}
+              </AnswerFeedback>
+            )}
+          </Container>
+        ) : (
+          <div>Loading...</div>
+        )}
+        {/* Footer for next question button */}
+        <Footer>
+          {/* Show next question button only if an answer is selected and it's not the last question */}
+          {currentQuestionIndex === questions.length - 1 && !quizFinished
+            ? selectedAnswer !== null && (
+                <NextQuestionButton onClick={handleNextQuestion}>
+                  Finish Quiz
+                </NextQuestionButton>
+              )
+            : selectedAnswer !== null &&
+              currentQuestionIndex !== questions.length - 1 && (
+                <NextQuestionButton onClick={handleNextQuestion}>
+                  Next Question
+                </NextQuestionButton>
+              )}
+        </Footer>
+      </PageContainer>
+    );
+  }
 };
 
 export default QuizPage;
