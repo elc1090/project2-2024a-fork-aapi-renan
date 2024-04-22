@@ -84,7 +84,43 @@ const NextQuestionButton = styled(Button)`
   margin-top: 20px;
 `;
 
+
+async function chamadaPerguntas (){
+  const fetch = require('node-fetch');
+
+// Definindo a URL da API e a chave da API
+  const apiUrl = 'https://quizapi.io/api/v1/questions';
+  const apiKey = 'yoxh1LlD16VsNHP8rjGofqbDiz59lAEnSmCumzvB';
+
+// Definindo os parâmetros da requisição
+  const params = {
+    limit: 10,
+  };
+
+// Fazendo a requisição GET para a API
+  fetch(`${apiUrl}?${new URLSearchParams(params)}`, {
+    headers: {
+      'X-Api-Key': apiKey,
+    },
+  })
+      .then(response => response.json()) // Convertendo a resposta em JSON
+      .then(data => {
+        // Iterando sobre as perguntas retornadas e imprimindo cada uma
+        data.forEach(question => {
+          console.log(question);
+          console.log(`Pergunta: ${question.question}`);
+          const corret_ans = question.correct_answer;
+          for (let key in question.answers) {
+            console.log(`Resposta ${key}: ${question.answers[key]}`);
+          }
+          console.log(`Resposta certa: ${corret_ans}`);
+        });
+      })
+      .catch(error => console.error('Erro:', error)); // Capturando qualquer erro que possa ocorrer
+}
+
 const QuizPage = () => {
+  chamadaPerguntas();
   // State variables for managing the quiz
   const [questions, setQuestions] = useState([
     {
