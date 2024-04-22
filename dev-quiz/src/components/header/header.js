@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const AppBar = styled.div`
@@ -31,7 +32,9 @@ const Score = styled.p`
 const Header = ({ title, score }) => {
   return (
     <AppBar>
-      <Title>{title}</Title>
+      <Title>
+        <Link to="/">{title}</Link>
+      </Title>
       <Score>Score: {score}</Score>
     </AppBar>
   );
