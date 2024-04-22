@@ -94,7 +94,9 @@ async function chamadaPerguntas (){
 
 // Definindo os parâmetros da requisição
   const params = {
-    limit: 10,
+    limit: 50,
+    category: "Linux",
+    difficulty: "easy"
   };
 
 // Fazendo a requisição GET para a API
