@@ -63,12 +63,14 @@ const LandingPage = () => {
   return (
     <LandingContainer>
       <WelcomeMessage>Welcome to DevQuiz!</WelcomeMessage>
-      <InstructionsMessage>Please select the field theme:</InstructionsMessage>
+      <InstructionsMessage>Please select the quiz theme:</InstructionsMessage>
       <ThemeSelector value={selectedTheme} onChange={handleThemeChange}>
-        <option value="default">Default Theme</option>
-        <option value="dark">Dark Theme</option>
-        <option value="light">Light Theme</option>
-        <option value="ocean">Ocean Theme</option>
+        <option value="linguagens">Linguagens</option>
+        <option value="frameworks">Frameworks</option>
+        <option value="bibliotecas">Bibliotecas</option>
+        <option value="conceitos">Conceitos</option>
+        <option value="paradigmas">Paradigmas</option>
+        <option value="ferramentas">Ferramentas</option>
       </ThemeSelector>
       <Link to="/quiz">
         <StartButton>Start Quiz</StartButton>

@@ -152,9 +152,10 @@ const QuizPage = () => {
   const [score, setScore] = useState(0);
   const [username, setUsername] = useState("");
   const [showEndMessage, setShowEndMessage] = useState(false);
-  const [highScores, setHighScores] = useState([]);
   const [quizFinished, setQuizFinished] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [loadingScores, setloadingScores] = useState(false);
+  const [scoresSent, setScoresSent] = useState(false);
 
   useEffect(() => {
     async function fetchQuestions() {
@@ -215,7 +216,7 @@ const QuizPage = () => {
   // Function to handle next question button click
   const handleNextQuestion = () => {
     // Check if an answer is selected
-    if (currentQuestionIndex === questions.length - 1 || currentQuestionIndex >= 9) {
+    if (currentQuestionIndex === questions.length - 1) {
       setShowEndMessage(true);
       setQuizFinished(true);
     } else {
@@ -223,7 +224,7 @@ const QuizPage = () => {
         // Check if the selected answer is correct
         // Move to the next question
         setSelectedAnswer(null);
-        
+
         setCurrentQuestionIndex(currentQuestionIndex + 1);
 
         setCurrentAnswers([
@@ -247,18 +248,19 @@ const QuizPage = () => {
             : null,
         ]);
 
-        for (var element in questions[currentQuestionIndex + 1].correct_answers) {
-          if (questions[currentQuestionIndex + 1].correct_answers[element] === "true") {
+        for (var element in questions[currentQuestionIndex + 1]
+          .correct_answers) {
+          if (
+            questions[currentQuestionIndex + 1].correct_answers[element] ===
+            "true"
+          ) {
             setCurrentCorrectAnswer(
-              questions[currentQuestionIndex + 1].answers[element.replace("_correct", "")]
+              questions[currentQuestionIndex + 1].answers[
+                element.replace("_correct", "")
+              ]
             );
           }
         }
-
-        console.log(questions);
-        console.log(questions[currentQuestionIndex]);
-        console.log(currentAnswers);
-        console.log(currentCorrectAnswer);
       } else {
         // Display a message to select an answer
         alert("Please select an answer");
@@ -267,12 +269,27 @@ const QuizPage = () => {
   };
 
   const handleFinishQuiz = () => {
-    setShowEndMessage(false);
-    setHighScores([...highScores, { name: username, score }]);
+    // setShowEndMessage(false);
+    if(!loadingScores) {
+      setloadingScores(true);
+      if(!scoresSent) {
+        let highscores = JSON.parse(localStorage.getItem("highScores"))
+        localStorage.setItem(
+          "highScores",
+          JSON.stringify([...highscores, { name: username, score: score }])
+        );
+        setScoresSent(true);
+      }
+      setloadingScores(false);
+    }
   };
 
   if (loading) {
-    return <div><LoadingText>Loading...</LoadingText></div>;
+    return (
+      <div>
+        <LoadingText>Loading...</LoadingText>
+      </div>
+    );
   }
 
   if (!loading) {
@@ -297,7 +314,7 @@ const QuizPage = () => {
               placeholder="Enter your name"
             />
             <br />
-            <NextQuestionButton onClick={handleFinishQuiz}>
+            <NextQuestionButton onClick={handleFinishQuiz} disabled={loadingScores}>
               <Link to="/highscores">Send Hiscore</Link>
             </NextQuestionButton>
           </EndMessageContainer>
@@ -363,7 +380,9 @@ const QuizPage = () => {
             {/* Display feedback whether the answer is correct or wrong */}
             {selectedAnswer && (
               <AnswerFeedback
-                correct={selectedAnswer === currentCorrectAnswer ? "true" : "false"}
+                correct={
+                  selectedAnswer === currentCorrectAnswer ? "true" : "false"
+                }
               >
                 {selectedAnswer === currentCorrectAnswer
                   ? "Correct!"
