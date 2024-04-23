@@ -39,7 +39,7 @@ Consumimos a API do QuizAPI para nossas perguntas.
 - [QuizAPI](https://quizapi.io/) (API e Backend)
 - [React](https://pt-br.legacy.reactjs.org/) (Frontend)
 - ~~[TailWind](https://tailwindcss.com/) (Styling)~~
-- [Styled Components](https://styled-components.com/) ("styled-components": "^6.1.8",) (Styling)
+- [Styled Components](https://styled-components.com/) (Styling)
 - [ChatGPT](https://chat.openai.com/)
 
 #### Ambiente de desenvolvimento
