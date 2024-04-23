@@ -27,8 +27,8 @@ Quiz com perguntas que tocam em várias áreas da programação e desenvolviment
 ~~Iremos utilizar o web-aplicativo Notion para criar nossas tabelas e fazer chamadas de API.~~
 Consumimos a API do QuizAPI para nossas perguntas.
 
-[~~Notion~~](https://www.notion.so/pt-br)
-[QuizAPI](https://quizapi.io/)
+- [~~Notion~~](https://www.notion.so/pt-br)
+- [QuizAPI](https://quizapi.io/)
 
 ### Desenvolvimento
 
@@ -42,10 +42,10 @@ Então, após um bom tempo corrigindo problemas no programa, chegamos a um fluxo
 
 #### Tecnologias
 
-- ~~Notion (API e Backend)~~
+- ~~[Notion](https://www.notion.so/pt-br) (API e Backend)~~
 - [QuizAPI](https://quizapi.io/) (API e Backend)
 - [React](https://pt-br.legacy.reactjs.org/) (Frontend)
-- ~~TailWind (Styling)~~
+- ~~[TailWind](https://tailwindcss.com/) (Styling)~~
 - [Styled Components](https://styled-components.com/) ("styled-components": "^6.1.8",) (Styling)
 - [ChatGPT](https://chat.openai.com/)
 
