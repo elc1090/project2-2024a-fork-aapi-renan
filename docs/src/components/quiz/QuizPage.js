@@ -62,7 +62,7 @@ const Options = styled.div`
 `;
 
 const AnswerFeedback = styled.p`
-  color: ${({ correct }) => (correct ? "#68d391" : "#f56565")};
+  color: ${({ correct }) => (correct === "true" ? "#68d391" : "#f56565")};
   font-weight: bold;
   text-align: center;
 `;
@@ -104,6 +104,11 @@ const UsernameInput = styled.input`
   width: 100%;
   max-width: 300px;
   box-sizing: border-box;
+`;
+
+const LoadingText = styled.h2`
+  color: white;
+  font-size: 26px;
 `;
 
 async function chamadaPerguntas() {
@@ -201,7 +206,7 @@ const QuizPage = () => {
   const handleAnswerClick = (answer) => {
     setSelectedAnswer(answer);
     answeredQuestions[currentQuestionIndex].answered = true;
-    if (selectedAnswer === currentCorrectAnswer) {
+    if (answer === currentCorrectAnswer) {
       // Increment the score
       setScore(score + 1);
     }
@@ -210,7 +215,7 @@ const QuizPage = () => {
   // Function to handle next question button click
   const handleNextQuestion = () => {
     // Check if an answer is selected
-    if (currentQuestionIndex === questions.length - 1) {
+    if (currentQuestionIndex === questions.length - 1 || currentQuestionIndex >= 9) {
       setShowEndMessage(true);
       setQuizFinished(true);
     } else {
@@ -218,28 +223,42 @@ const QuizPage = () => {
         // Check if the selected answer is correct
         // Move to the next question
         setSelectedAnswer(null);
+        
         setCurrentQuestionIndex(currentQuestionIndex + 1);
 
         setCurrentAnswers([
-          questions[currentQuestionIndex].answers["answer_a"]
-            ? questions[currentQuestionIndex].answers["answer_a"]
+          questions[currentQuestionIndex + 1].answers["answer_a"]
+            ? questions[currentQuestionIndex + 1].answers["answer_a"]
             : null,
-          questions[currentQuestionIndex].answers["answer_b"]
-            ? questions[currentQuestionIndex].answers["answer_b"]
+          questions[currentQuestionIndex + 1].answers["answer_b"]
+            ? questions[currentQuestionIndex + 1].answers["answer_b"]
             : null,
-          questions[currentQuestionIndex].answers["answer_c"]
-            ? questions[currentQuestionIndex].answers["answer_c"]
+          questions[currentQuestionIndex + 1].answers["answer_c"]
+            ? questions[currentQuestionIndex + 1].answers["answer_c"]
             : null,
-          questions[currentQuestionIndex].answers["answer_d"]
-            ? questions[currentQuestionIndex].answers["answer_d"]
+          questions[currentQuestionIndex + 1].answers["answer_d"]
+            ? questions[currentQuestionIndex + 1].answers["answer_d"]
             : null,
-          questions[currentQuestionIndex].answers["answer_e"]
-            ? questions[currentQuestionIndex].answers["answer_e"]
+          questions[currentQuestionIndex + 1].answers["answer_e"]
+            ? questions[currentQuestionIndex + 1].answers["answer_e"]
             : null,
-          questions[currentQuestionIndex].answers["answer_f"]
-            ? questions[currentQuestionIndex].answers["answer_f"]
+          questions[currentQuestionIndex + 1].answers["answer_f"]
+            ? questions[currentQuestionIndex + 1].answers["answer_f"]
             : null,
         ]);
+
+        for (var element in questions[currentQuestionIndex + 1].correct_answers) {
+          if (questions[currentQuestionIndex + 1].correct_answers[element] === "true") {
+            setCurrentCorrectAnswer(
+              questions[currentQuestionIndex + 1].answers[element.replace("_correct", "")]
+            );
+          }
+        }
+
+        console.log(questions);
+        console.log(questions[currentQuestionIndex]);
+        console.log(currentAnswers);
+        console.log(currentCorrectAnswer);
       } else {
         // Display a message to select an answer
         alert("Please select an answer");
@@ -253,7 +272,7 @@ const QuizPage = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><LoadingText>Loading...</LoadingText></div>;
   }
 
   if (!loading) {
@@ -344,7 +363,7 @@ const QuizPage = () => {
             {/* Display feedback whether the answer is correct or wrong */}
             {selectedAnswer && (
               <AnswerFeedback
-                correct={(selectedAnswer === currentCorrectAnswer).toString()}
+                correct={selectedAnswer === currentCorrectAnswer ? "true" : "false"}
               >
                 {selectedAnswer === currentCorrectAnswer
                   ? "Correct!"
@@ -353,7 +372,7 @@ const QuizPage = () => {
             )}
           </Container>
         ) : (
-          <div>Loading...</div>
+          <div>Loading</div>
         )}
         {/* Footer for next question button */}
         <Footer>
