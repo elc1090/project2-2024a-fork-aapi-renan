@@ -273,7 +273,7 @@ const QuizPage = () => {
     if(!loadingScores) {
       setloadingScores(true);
       if(!scoresSent) {
-        let highscores = JSON.parse(localStorage.getItem("highScores"))
+        let highscores = JSON.parse(localStorage.getItem("highScores")) || [];
         localStorage.setItem(
           "highScores",
           JSON.stringify([...highscores, { name: username, score: score }])
