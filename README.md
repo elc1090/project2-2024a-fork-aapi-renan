@@ -47,6 +47,8 @@ Consumimos a API do QuizAPI para nossas perguntas.
 - [VS Code](https://code.visualstudio.com/) (IDE)
 - [Google Chrome](https://www.google.com/intl/pt-BR/chrome/) (Navegador)
 - [Brave](https://brave.com/pt-br/) (Navegador)
+- [WebStorm](https://www.jetbrains.com/webstorm) (IDE)
+- [Edge](https://www.microsoft.com/pt-br/edge/download?form=MA13FJ) (Navegador) 
 
 #### Referências e créditos
 
