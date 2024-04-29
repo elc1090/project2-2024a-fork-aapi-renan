@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -30,6 +30,15 @@ const ThemeSelector = styled.select`
   font-size: 16px;
 `;
 
+const DifficultySelector = styled.select`
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #4299e1;
+  border-radius: 5px;
+  background-color: white;
+  font-size: 16px;
+`;
+
 const StartButton = styled.button`
   margin-top: 20px;
   background-color: #4299e1;
@@ -50,7 +59,9 @@ const StartButton = styled.button`
 
 const LandingPage = () => {
 //   const [quizStarted, setQuizStarted] = useState(false);
-  const [selectedTheme, setSelectedTheme] = useState("default");
+  const [selectedTheme, setSelectedTheme] = useState("Linux");
+  const [selectedDifficulty, setSelectedDifficulty] = useState("Medium");
+  const [categories, setCategories] = useState([]);
 
 //   const handleStartQuiz = () => {
 //     setQuizStarted(true);
@@ -59,20 +70,54 @@ const LandingPage = () => {
   const handleThemeChange = (event) => {
     setSelectedTheme(event.target.value);
   };
+  const handleDifficultyChange = (event) => {
+    setSelectedDifficulty(event.target.value);
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const apiUrl = "https://quizapi.io/api/v1/categories";
+        const apiKey = "yoxh1LlD16VsNHP8rjGofqbDiz59lAEnSmCumzvB";
+        const response = await fetch(apiUrl, {
+          headers: {
+            "X-Api-Key": apiKey,
+          },
+        });
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error("Erro:", error);
+      }
+    };
+    
+    fetchCategories();
+  }, []);
+
 
   return (
     <LandingContainer>
       <WelcomeMessage>Welcome to DevQuiz!</WelcomeMessage>
       <InstructionsMessage>Please select the quiz theme:</InstructionsMessage>
       <ThemeSelector value={selectedTheme} onChange={handleThemeChange}>
-        <option value="linguagens">Linguagens</option>
-        <option value="frameworks">Frameworks</option>
-        <option value="bibliotecas">Bibliotecas</option>
-        <option value="conceitos">Conceitos</option>
-        <option value="paradigmas">Paradigmas</option>
-        <option value="ferramentas">Ferramentas</option>
+      {categories.map(item => (
+        <option value={item.name}>
+          {item.name.charAt(0).toUpperCase() + item.name.slice(1)}
+        </option>
+      ))}
       </ThemeSelector>
-      <Link to="/quiz">
+      <DifficultySelector value={selectedDifficulty} onChange={handleDifficultyChange}>
+        <option value="Easy">
+          Easy
+        </option>
+        <option value="Medium">
+          Medium
+        </option>
+        <option value="Hard">
+          Hard
+        </option>
+      </DifficultySelector>
+      <Link to={`/quiz?theme=${selectedTheme}&difficulty=${selectedDifficulty}`}>
         <StartButton>Start Quiz</StartButton>
       </Link>
     </LandingContainer>

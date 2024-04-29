@@ -1,7 +1,7 @@
 // QuizPage.js
 
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Button from "../button/button.js";
 import Header from "../header/header.js";
@@ -111,7 +111,7 @@ const LoadingText = styled.h2`
   font-size: 26px;
 `;
 
-async function chamadaPerguntas() {
+async function chamadaPerguntas(theme, difficulty) {
   const fetch = require("node-fetch");
 
   var questions = [];
@@ -123,8 +123,8 @@ async function chamadaPerguntas() {
   // Definindo os parâmetros da requisição
   const params = {
     limit: 50,
-    category: "Linux",
-    difficulty: "easy",
+    category: theme,
+    difficulty: difficulty,
   };
 
   // Fazendo a requisição GET para a API
@@ -157,10 +157,15 @@ const QuizPage = () => {
   const [loadingScores, setloadingScores] = useState(false);
   const [scoresSent, setScoresSent] = useState(false);
 
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const theme = searchParams.get('theme');
+  const difficulty = searchParams.get('difficulty');
+
   useEffect(() => {
     async function fetchQuestions() {
       try {
-        const response = await chamadaPerguntas();
+        const response = await chamadaPerguntas(theme, difficulty);
         setQuestions(response);
         setAnsweredQuestions(
           response.map((question) => ({
