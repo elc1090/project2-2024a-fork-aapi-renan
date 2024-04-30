@@ -14,9 +14,9 @@ Deploy: https://quiz-app-latest.onrender.com
 ## Alterações
 
 Foram feitas alterações na Página Inicial do App:
-- A caixa de seleção de Tema agora mostra uma lista de temas válidos para seleção
-- O Tema selecionado pelo usuário agora persiste e é direcionado à página de Quiz para de fato filtrar as perguntas
-- Foi adicionado uma caixa de seleção de dificuldade de perguntas
+- A caixa de seleção de Tema agora mostra uma lista dinâmica de temas válidos para seleção;
+- O Tema selecionado pelo usuário agora persiste e é direcionado à página de Quiz para de fato filtrar as perguntas;
+- Foi adicionado uma caixa de seleção de dificuldade de perguntas;
 
 ### Tecnologias adicionais
 
@@ -70,6 +70,7 @@ Foram feitas alterações na Página Inicial do App:
 > - [ChatGPT](https://chat.openai.com/) foi bastante usado para rearranjar elementos na tela e para estilização, então temos muitos prompts do tipo: "put it into a floating container and make the background dark", "make the container brighter", "centralize the page title and put the score to the very right of the appbar, also put the question underneath the question number, on a different line", vários prompts desse tipo.
 > - [StackOverflow](https://stackoverflow.com/) foi muito usado também, em páginas como [How to work with styled components in my react app?](https://stackoverflow.com/questions/42374080/how-to-work-with-styled-components-in-my-react-app), [Switch' is not exported from 'react-router-dom'](https://stackoverflow.com/questions/69843615/switch-is-not-exported-from-react-router-dom)  
 <br>
+
 ---
 Projeto entregue para a disciplina de [Desenvolvimento de Software para a Web](http://github.com/andreainfufsm/elc1090-2024a) em 2024a
  
