@@ -1,0 +1,25 @@
+services:
+  quiz-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: quiz-app
+    restart: always  
+    networks:
+      - traefik-proxy
+    labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=traefik-proxy"
+        - "traefik.http.routers.quiz-app.entrypoints=http"
+        - "traefik.http.routers.quiz-app.rule=Host(`quiz-app.cloud.local`)"
+        - "traefik.http.middlewares.quiz-app-https-redirect.redirectscheme.scheme=https"
+        - "traefik.http.routers.quiz-app.middlewares=quiz-app-https-redirect"
+        - "traefik.http.routers.quiz-app-secure.entrypoints=https"
+        - "traefik.http.routers.quiz-app-secure.rule=Host(`quiz-app.cloud.local`)"
+        - "traefik.http.routers.quiz-app-secure.tls=true"
+        #- "traefik.http.routers.quiz-app-secure.tls.certresolver=http"
+        - "traefik.http.services.quiz-app-secure.loadbalancer.server.port=3000"
+
+networks:
+  traefik-proxy:
+    external: true
